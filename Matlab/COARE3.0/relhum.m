@@ -1,0 +1,10 @@
+function [rh]=relhum(x)
+%x=[t h p]
+t=x(:,1);%air temp (Cent)
+qa=x(:,2);%spec hum (g/kg) 
+p=x(:,3);%pressure (mb)
+tdk=273.16;
+Rgas=287.1;
+e=6.112.*exp(17.502.*t./(t+241.0)).*(1.0007+3.46e-6*p);%vapor pressure, from Buck
+qs=e*622./(p-.378*e);%specific humidity, g/kg
+rh=qa./qs*100;%absolute humidity (g/m^3)

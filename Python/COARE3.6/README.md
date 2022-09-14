@@ -19,10 +19,10 @@ This file contains a time series of following variables.
 | Variable Name | Description | Notes |
 | :------------ | :---------: | ----: |
 | usr           | friction velocity that includes gustiness (m/s) | Denoted by u* |
-| tau           | wind stress that includes gustiness (N/$m^2$)| |
-| hsb           | sensible heat flux (W/$m^2$) | positive for $T_{air}$ < $T_{skin}$ |
-| hlb           | latent heat flux (W/$m^2$) | positive for $q_{air} < q_s$
-| hbb           | atmospheric buoyany flux ($W/m^2$) | positive when `hlb` and `hsb` heat the atmosphere |
+| tau           | wind stress that includes gustiness (N/m^2)| |
+| hsb           | sensible heat flux (W/m^2) | positive for $T_{air}$ < $T_{skin}$ |
+| hlb           | latent heat flux (W/m^2) | positive for $q_{air} < q_s$
+| hbb           | atmospheric buoyany flux (W/m^2) | positive when `hlb` and `hsb` heat the atmosphere |
 | hsbb          | atmospheric buoyancy flux from sonic | as above, computed with sonic anemometer `T` |
 | hlwebb        | Webb factor to be added to `hl` | covariance and ID latent heat fluxes |
 | tsr           | temperature scaling parameter (K) | Denoted by t* |             
@@ -67,8 +67,8 @@ This file contains a time series of following variables.
 | rhoa10 | air density at 10m (kg/m3) | |
 | gust | gustiness velocity (m/s) | |
 | wc_frac | whitecap fraction (ratio) | |
-| Edis | energy dissipated by wave breaking ($W/m^2$) | |
+| Edis | energy dissipated by wave breaking (W/m^2) | |
 | dT_warm | dT from base of warm layer to skin, i.e. warming across entire warm layer depth (deg C) | |
 | dz_warm | warm layer thickness (m) | |
-| dT\_warm\_to\_skin | dT from measurement depth to skin due to warm layer, such that $T_{skin} = T_{sea} + dT_{warm\_to\_skin} - dT_{skin}$ | |
+| dT\_warm\_to\_skin | dT from measurement depth to skin due to warm layer, such that $T_{skin} = T_{sea} + dT_{warm_to_skin} - dT_{skin}$ | |
 | du_warm | total current accumulation in warm layer (m/s) | |

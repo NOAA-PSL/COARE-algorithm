@@ -109,14 +109,14 @@ def rhod(t, p):
 
     inputs: t (deg C), and p (mb or hPa)
 
-    output: Rd = dry air density in kg/m3
+    output: Rdry = dry air density in kg/m3
 
     """
     Rd = 287.058        # gas const for dry air in J/kg K
-    tk = t+273.15       # deg Kelvin
+    Tk = t+273.15       # deg Kelvin
     Pa = p*100          # Pascals
     Rdry = Pa/(Rd*Tk)   # dry air density, kg/m3
-    return Rd
+    return Rdry
 
 
 def grv(latitude):

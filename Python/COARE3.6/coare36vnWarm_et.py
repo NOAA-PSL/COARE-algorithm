@@ -393,14 +393,13 @@ def ComputeEsat(T = None,P = None):
 #------------------------------------------------------------------------------
 
 # This code executes if 'run coare36vnWarm_et.py' is executed from iPython cmd line
-# Edit line 403 to indicate path to test data file
 if __name__ == '__main__':
     # import numpy as np
     # import os
     # import util
     # import matplotlib.pyplot as plt
     
-    path = '/Users/ludo/Documents/Work/COARE/conversion2python_tests/'
+    path = os.path.dirname(__file__)
     fil = 'test_36_data.txt'   
     data = np.genfromtxt(path+fil, skip_header=1)
     U = data[:,1]

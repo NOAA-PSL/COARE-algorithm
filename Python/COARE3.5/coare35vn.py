@@ -8,8 +8,10 @@ Ludovic Bariteau, CU/CIRES, NOAA/ESRL/PSD3
 v1: May 2015
 v2: July 2020. Fixed some typos and changed syntax for python 3.7 compatibility.
 """
+
+
 def coare35vn(u, t, rh, ts, P=1015, Rs=150, Rl=370, zu=18, zt=18, zq=18, lat=45,
-             zi=600, rain=None, cp=None, sigH=None, jcool=1):
+              zi=600, rain=None, cp=None, sigH=None, jcool=1):
     """
     usage: A = coare35vn(u, t, rh, ts)  -  include other kwargs as desired
     Vectorized version of COARE 3 code (Fairall et al, 2003) with modification
@@ -138,38 +140,38 @@ def coare35vn(u, t, rh, ts, P=1015, Rs=150, Rl=370, zu=18, zt=18, zq=18, lat=45,
     lat = np.copy(np.asarray(lat, dtype=float))
     # check for mandatory input variable consistency
     len = u.size
-    if not np.all([t.size==len, rh.size==len, ts.size==len]):
-        raise ValueError ('coare35vn: u, t, rh, ts arrays of different length')
+    if not np.all([t.size == len, rh.size == len, ts.size == len]):
+        raise ValueError('coare35vn: u, t, rh, ts arrays of different length')
     # format optional array inputs
     if P.size != len and P.size != 1:
-        raise ValueError ('coare35vn: P array of different length')
+        raise ValueError('coare35vn: P array of different length')
     elif P.size == 1:
         P = P * np.ones(len)
     if Rl.size != len and Rl.size != 1:
-        raise ValueError ('coare35vn: Rl array of different length')
+        raise ValueError('coare35vn: Rl array of different length')
     elif Rl.size == 1:
         Rl = Rl * np.ones(len)
     if Rs.size != len and Rs.size != 1:
-        raise ValueError ('coare35vn: Rs array of different length')
+        raise ValueError('coare35vn: Rs array of different length')
     elif Rs.size == 1:
         Rs = Rs * np.ones(len)
     if zi.size != len and zi.size != 1:
-        raise ValueError ('coare35vn: zi array of different length')
+        raise ValueError('coare35vn: zi array of different length')
     elif zi.size == 1:
         zi = zi * np.ones(len)
     if lat.size != len and lat.size != 1:
-        raise ValueError ('coare35vn: lat array of different length')
+        raise ValueError('coare35vn: lat array of different length')
     elif lat.size == 1:
         lat = lat * np.ones(len)
     if rain is not None:
         rain = np.asarray(rain, dtype=float)
         if rain.size != len:
-            raise ValueError ('coare35vn: rain array of different length')
+            raise ValueError('coare35vn: rain array of different length')
     if cp is not None:
         waveage_flag = True
         cp = np.copy(np.asarray(cp, dtype=float))
         if cp.size != len:
-            raise ValueError ('coare35vn: cp array of different length')
+            raise ValueError('coare35vn: cp array of different length')
         elif cp.size == 1:
             cp = cp * np.ones(len)
     else:
@@ -179,16 +181,16 @@ def coare35vn(u, t, rh, ts, P=1015, Rs=150, Rl=370, zu=18, zt=18, zq=18, lat=45,
         seastate_flag = True
         sigH = np.copy(np.asarray(sigH, dtype=float))
         if sigH.size != len:
-            raise ValueError ('coare35vn: sigH array of different length')
+            raise ValueError('coare35vn: sigH array of different length')
         elif sigH.size == 1:
             sigH = sigH * np.ones(len)
     else:
         seastate_flag = False
         sigH = np.nan * np.ones(len)
     if waveage_flag and seastate_flag:
-        print ('Using seastate dependent parameterization')
+        print('Using seastate dependent parameterization')
     if waveage_flag and not seastate_flag:
-        print ('Using waveage dependent parameterization')
+        print('Using waveage dependent parameterization')
     # check jcool
     if jcool != 0:
         jcool = 1   # all input other than 0 defaults to jcool=1
@@ -197,7 +199,7 @@ def coare35vn(u, t, rh, ts, P=1015, Rs=150, Rl=370, zu=18, zt=18, zq=18, lat=45,
     test.append(type(zt) is int or type(zt) is float)
     test.append(type(zq) is int or type(zq) is float)
     if not np.all(test):
-        raise ValueError ('coare35vn: zu, zt, zq, should be constants')
+        raise ValueError('coare35vn: zu, zt, zq, should be constants')
     zu = zu * np.ones(len)
     zt = zt * np.ones(len)
     zq = zq * np.ones(len)
@@ -207,41 +209,41 @@ def coare35vn(u, t, rh, ts, P=1015, Rs=150, Rl=370, zu=18, zt=18, zq=18, lat=45,
     # construct u prior to using this code.
     us = np.zeros(len)
     # convert rh to specific humidity
-    Qs = meteo.qsea(ts,P)/1000.0  # surface water specific humidity (kg/kg)
-    Q, Pv = meteo.qair(t,P,rh)    # specific hum. and partial Pv (mb)
+    Qs = meteo.qsea(ts, P)/1000.0  # surface water specific humidity (kg/kg)
+    Q, Pv = meteo.qair(t, P, rh)    # specific hum. and partial Pv (mb)
     Q /= 1000.0                   # Q (kg/kg)
     # set constants
     zref = 10.          # ref height, m (edit as desired)
     Beta = 1.2
-    von  = 0.4          # von Karman const
-    fdg  = 1.00         # Turbulent Prandtl number
-    tdk  = 273.16
+    von = 0.4          # von Karman const
+    fdg = 1.00         # Turbulent Prandtl number
+    tdk = 273.16
     grav = meteo.grv(lat)
     # air constants
     Rgas = 287.1
-    Le   = (2.501 - 0.00237*ts) * 1e6
-    cpa  = 1004.67
-    cpv  = cpa * (1 + 0.84*Q)
+    Le = (2.501 - 0.00237*ts) * 1e6
+    cpa = 1004.67
+    cpv = cpa * (1 + 0.84*Q)
     rhoa = P*100. / (Rgas * (t + tdk) * (1 + 0.61*Q))
     rhodry = (P - Pv)*100. / (Rgas * (t + tdk))
     visa = 1.326e-5 * (1 + 6.542e-3*t + 8.301e-6*t**2 - 4.84e-9*t**3)
     # cool skin constants
-    Al   = 2.1e-5 * (ts + 3.2)**0.79
-    be   = 0.026
-    cpw  = 4000.
+    Al = 2.1e-5 * (ts + 3.2)**0.79
+    be = 0.026
+    cpw = 4000.
     rhow = 1022.
     visw = 1.e-6
-    tcw  = 0.6
+    tcw = 0.6
     bigc = 16. * grav * cpw * (rhow * visw)**3 / (tcw**2 * rhoa**2)
     wetc = 0.622 * Le * Qs / (Rgas * (ts + tdk)**2)
     # net radiation fluxes
-    Rns = 0.945 * Rs        #albedo correction
+    Rns = 0.945 * Rs  # albedo correction
     #    IRup = eps * sigma*T**4 + (1 - eps)*IR
     #    Rnl = IRup - IR
     #    Rnl = eps * sigma*T**4 - eps*IR  as below
-    Rnl = 0.97 * (5.67e-8 * (ts - 0.3*jcool + tdk)**4 - Rl) # initial value
+    Rnl = 0.97 * (5.67e-8 * (ts - 0.3*jcool + tdk)**4 - Rl)  # initial value
     #    IRup = Rnl + IR
-    #####     BEGIN BULK LOOP
+    # BEGIN BULK LOOP
     # first guess
     du = u - us
     dt = ts - t - 0.0098*zt
@@ -262,7 +264,7 @@ def coare35vn(u, t, rh, ts, P=1015, Rs=150, Rl=370, zu=18, zt=18, zq=18, lat=45,
     CC = von * Ct/Cd
     Ribcu = -zu / zi / 0.004 / Beta**3
     Ribu = -grav * zu/ta * ((dt - dter*jcool) + 0.61*ta*dq) / ut**2
-    zetu = CC * Ribu * (1 + 27/9  * Ribu/CC)
+    zetu = CC * Ribu * (1 + 27/9 * Ribu/CC)
     k50 = util.find(zetu > 50)   # stable with thin M-O length relative to zu
     k = util.find(Ribu < 0)
     if Ribcu.size == 1:
@@ -273,9 +275,9 @@ def coare35vn(u, t, rh, ts, P=1015, Rs=150, Rl=370, zu=18, zt=18, zq=18, lat=45,
     gf = ut / du
     usr = ut * von / (np.log(zu/zo10) - meteo.psiu_40(zu/L10))
     tsr = -(dt - dter*jcool)*von*fdg / (np.log(zt/zot10) -
-            meteo.psit_26(zt/L10))
+                                        meteo.psit_26(zt/L10))
     qsr = -(dq - wetc*dter*jcool)*von*fdg / (np.log(zq/zot10) -
-            meteo.psit_26(zq/L10))
+                                             meteo.psit_26(zq/L10))
     tkt = 0.001 * np.ones(len)
     # The following gives the new formulation for the Charnock variable
     charnC = 0.011 * np.ones(len)
@@ -330,7 +332,7 @@ def coare35vn(u, t, rh, ts, P=1015, Rs=150, Rl=370, zu=18, zt=18, zq=18, lat=45,
             ug[k] = Beta*(Bf[k]*zi)**0.333
         else:
             ug[k] = Beta*(Bf[k]*zi[k])**0.333
-        ut = np.sqrt(du**2  + ug**2)
+        ut = np.sqrt(du**2 + ug**2)
         gf = ut/du
         hsb = -rhoa*cpa*usr*tsr
         hlb = -rhoa*Le*usr*qsr
@@ -381,9 +383,9 @@ def coare35vn(u, t, rh, ts, P=1015, Rs=150, Rl=370, zu=18, zt=18, zq=18, lat=45,
     hsbb = -rhoa*cpa*usr*tssr       # sonic buoyancy flux
     wbar = 1.61*hlb/Le/(1+1.61*Q)/rhoa + hsb/rhoa/cpa/ta
     hlwebb = rhoa*wbar*Q*Le
-    Evap = 1000*hlb/Le/1000*3600 # mm/hour
+    Evap = 1000*hlb/Le/1000*3600  # mm/hour
     # compute transfer coeffs relative to ut @ meas. ht
-    Cd = tau/rhoa/ut/np.maximum(0.1,du)
+    Cd = tau/rhoa/ut/np.maximum(0.1, du)
     Ch = -usr*tsr/ut/(dt - dter*jcool)
     Ce = -usr*qsr/(dq - dqer*jcool)/ut
     # compute 10-m neutral coeff relative to ut
@@ -440,7 +442,7 @@ def coare35vn(u, t, rh, ts, P=1015, Rs=150, Rl=370, zu=18, zt=18, zq=18, lat=45,
     T10N = T10 + psi10T*tsr/von
     TrfN = Trf + psirfT*tsr/von
     TN2 = SST + tsr/von * np.log(zt/zot) - lapse*zt
-    T10N2 = SST + tsr/von * np.log(10/zot) - lapse*10;
+    T10N2 = SST + tsr/von * np.log(10/zot) - lapse*10
     TrfN2 = SST + tsr/von * np.log(zrf_t/zot) - lapse*zrf_t
     dqer = wetc*dter*jcool
     SSQ = Qs - dqer
@@ -463,11 +465,14 @@ def coare35vn(u, t, rh, ts, P=1015, Rs=150, Rl=370, zu=18, zt=18, zq=18, lat=45,
 #     list3 = [Cdn_10,Chn_10,Cen_10,RF,Evap,Qs,Q10,RH10]
 #     out = tuple(list1 + list2 + list3)
     # basic default output...
-    list1 = [usr,tau,hsb,hlb,hlwebb,tsr,qsr,zot,zoq,Cd,Ch,Ce,L,zet]
-    list2 = [dter,dqer,tkt,RF,Cdn_10,Chn_10,Cen_10]
+    list1 = [usr, tau, hsb, hlb, hlwebb, tsr,
+             qsr, zot, zoq, Cd, Ch, Ce, L, zet]
+    list2 = [dter, dqer, tkt, RF, Cdn_10, Chn_10, Cen_10]
     out = tuple(list1 + list2)
     A = np.column_stack(out)
     return A
+
+
 # This code executes if 'run coare35vn.py' is executed from iPython cmd line
 # Edit line 533 to indicate path to test data file
 if __name__ == '__main__':
@@ -478,21 +483,20 @@ if __name__ == '__main__':
     path = '/Volumes/MyPassport/pyCOARE_NOAA'
     fil = 'test_35_data.txt'
     cols = 15
-    data, varNames = util.load_txt_file(path,fil,cols)
-    u = data[:,0]
-    ta = data[:,2]
-    rh = data[:,4]
-    Pa = data[:,6]
-    ts = data[:,7]
-    rs = data[:,8]
-    rl = data[:,9]
-    Lat = data[:,10]
-    ZI = data[:,11]
-    Rain = data[:,12]
+    data, varNames = util.load_txt_file(path, fil, cols)
+    u = data[:, 0]
+    ta = data[:, 2]
+    rh = data[:, 4]
+    Pa = data[:, 6]
+    ts = data[:, 7]
+    rs = data[:, 8]
+    rl = data[:, 9]
+    Lat = data[:, 10]
+    ZI = data[:, 11]
+    Rain = data[:, 12]
     A = coare35vn(u, ta, rh, ts, P=Pa, Rs=rs, Rl=rl, zu=16, zt=16, zq=16,
-                lat=Lat, zi=ZI, rain=Rain, jcool=1)
-    fnameA = os.path.join(path,'test_35_output_py_082020.txt')
+                  lat=Lat, zi=ZI, rain=Rain, jcool=1)
+    fnameA = os.path.join(path, 'test_35_output_py_082020.txt')
     A_hdr = 'usr\ttau\thsb\thlb\thlwebb\ttsr\tqsr\tzot\tzoq\tCd\t'
     A_hdr += 'Ch\tCe\tL\tzet\tdter\tdqer\ttkt\tRF\tCdn_10\tChn_10\tCen_10'
-    np.savetxt(fnameA,A,fmt='%.18e',delimiter='\t',header=A_hdr)
-
+    np.savetxt(fnameA, A, fmt='%.18e', delimiter='\t', header=A_hdr)

@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+import os
+import numpy as np
+import meteo
+import util
+
 """
 Functions for COARE model bulk flux calculations.
 Translated and vectorized from J Edson/ C Fairall MATLAB scripts.
@@ -122,9 +128,6 @@ def coare35vn(u, t, rh, ts, P=1015, Rs=150, Rl=370, zu=18, zt=18, zq=18, lat=45,
     5) Python translation by BWB, Oct 2014.  Modified to allow user specified
        vectors for lat and zi.  Defaults added for zu, zt, zq.
     """
-    import numpy as np
-    import meteo
-    import util
     # be sure array inputs are ndarray floats
     # if inputs are already ndarray float this does nothing
     # otherwise copies are created in the local namespace
@@ -475,10 +478,6 @@ def coare35vn(u, t, rh, ts, P=1015, Rs=150, Rl=370, zu=18, zt=18, zq=18, lat=45,
 
 # This code executes if 'run coare35vn.py' is executed from iPython cmd line
 if __name__ == '__main__':
-    import numpy as np
-    import os
-    import util
-    import matplotlib.pyplot as plt
     path = os.path.dirname(__file__)
     fil = 'test_35_data.txt'
     cols = 15

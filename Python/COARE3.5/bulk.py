@@ -165,44 +165,44 @@ def coare35vn(u, t, rh, ts, P=1015, Rs=150, Rl=370, zu=18, zt=18, zq=18, lat=45,
     # check for mandatory input variable consistency
     len = u.size
     if not np.all([t.size == len, rh.size == len, ts.size == len]):
-        raise ValueError, 'coare35vn: u, t, rh, ts arrays of different length'
+        raise ValueError('coare35vn: u, t, rh, ts arrays of different length')
 
     # format optional array inputs
     if P.size != len and P.size != 1:
-        raise ValueError, 'coare35vn: P array of different length'
+        raise ValueError('coare35vn: P array of different length')
     elif P.size == 1:
         P = P * np.ones(len)
 
     if Rl.size != len and Rl.size != 1:
-        raise ValueError, 'coare35vn: Rl array of different length'
+        raise ValueError('coare35vn: Rl array of different length')
     elif Rl.size == 1:
         Rl = Rl * np.ones(len)
 
     if Rs.size != len and Rs.size != 1:
-        raise ValueError, 'coare35vn: Rs array of different length'
+        raise ValueError('coare35vn: Rs array of different length')
     elif Rs.size == 1:
         Rs = Rs * np.ones(len)
 
     if zi.size != len and zi.size != 1:
-        raise ValueError, 'coare35vn: zi array of different length'
+        raise ValueError('coare35vn: zi array of different length')
     elif zi.size == 1:
         zi = zi * np.ones(len)
 
     if lat.size != len and lat.size != 1:
-        raise ValueError, 'coare35vn: lat array of different length'
+        raise ValueError('coare35vn: lat array of different length')
     elif lat.size == 1:
         lat = lat * np.ones(len)
 
     if rain is not None:
         rain = np.asarray(rain, dtype=float)
         if rain.size != len:
-            raise ValueError, 'coare35vn: rain array of different length'
+            raise ValueError('coare35vn: rain array of different length')
 
     if cp is not None:
         waveage_flag = True
         cp = np.copy(np.asarray(cp, dtype=float))
         if cp.size != len:
-            raise ValueError, 'coare35vn: cp array of different length'
+            raise ValueError('coare35vn: cp array of different length')
         elif cp.size == 1:
             cp = cp * np.ones(len)
     else:
@@ -213,7 +213,7 @@ def coare35vn(u, t, rh, ts, P=1015, Rs=150, Rl=370, zu=18, zt=18, zq=18, lat=45,
         seastate_flag = True
         sigH = np.copy(np.asarray(sigH, dtype=float))
         if sigH.size != len:
-            raise ValueError, 'coare35vn: sigH array of different length'
+            raise ValueError('coare35vn: sigH array of different length')
         elif sigH.size == 1:
             sigH = sigH * np.ones(len)
     else:
@@ -221,10 +221,10 @@ def coare35vn(u, t, rh, ts, P=1015, Rs=150, Rl=370, zu=18, zt=18, zq=18, lat=45,
         sigH = np.nan * np.ones(len)
 
     if waveage_flag and seastate_flag:
-        print 'Using seastate dependent parameterization'
+        print('Using seastate dependent parameterization')
 
     if waveage_flag and not seastate_flag:
-        print 'Using waveage dependent parameterization'
+        print('Using waveage dependent parameterization')
 
     # check jcool
     if jcool != 0:
@@ -235,7 +235,7 @@ def coare35vn(u, t, rh, ts, P=1015, Rs=150, Rl=370, zu=18, zt=18, zq=18, lat=45,
     test.append(type(zt) is int or type(zt) is float)
     test.append(type(zq) is int or type(zq) is float)
     if not np.all(test):
-        raise ValueError, 'coare35vn: zu, zt, zq, should be constants'
+        raise ValueError('coare35vn: zu, zt, zq, should be constants')
     zu = zu * np.ones(len)
     zt = zt * np.ones(len)
     zq = zq * np.ones(len)

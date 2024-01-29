@@ -3,8 +3,11 @@ Utility functions gathered from various sources or custom.
 
 V.1 Oct 2014, BWB
 """
+import os
+import numpy as np
 
-def load_txt_file(path,fil,cols,sep='\t',hdr=True):
+
+def load_txt_file(path, fil, cols, sep='\t', hdr=True):
     """
     loads delimited text file of column variables
     header, if present, is assumed to be one line of var names only
@@ -20,14 +23,12 @@ def load_txt_file(path,fil,cols,sep='\t',hdr=True):
     output: data: 2-D array of data as column variables
             varNames: list of variable names
     """
-    import os
-    import numpy as np
-
-    fpath = os.path.join(path,fil)
+    fpath = os.path.join(path, fil)
     fin = open(fpath)
     first = True
-    data = np.zeros((0,cols))
-    temp = np.zeros((1,cols))
+    data = np.zeros((0, cols))
+    temp = np.zeros((1, cols))
+    varNames = []
     for line in fin:
         if first and hdr:
             cleanLine = line.strip()
@@ -35,17 +36,16 @@ def load_txt_file(path,fil,cols,sep='\t',hdr=True):
             first = False
             continue
         elif first and not hdr:
-            varNames = []
-            for jj in range(cols): # default var names
+            for jj in range(cols):  # default var names
                 varNames.append('var'+str(jj))
             first = False
         cleanLine = line.strip()
         fields = cleanLine.split(sep)
         for jj in range(cols):
-            temp[0,jj] = np.float(fields[jj])
-        data = np.row_stack((data,temp))
+            temp[0, jj] = np.float64(fields[jj])
+        data = np.row_stack((data, temp))
     fin.close()
-    return (data, varNames)
+    return data, varNames
 
 
 def noaa_tcode(ddd, hh, code_str):
@@ -62,15 +62,12 @@ def noaa_tcode(ddd, hh, code_str):
     Output is decimal julian date/time for given year
 
     """
-
-    import numpy as np
-
-    day = np.float(ddd)
-    hr = np.float(hh)
-    min = np.float(code_str[0:2])
-    sec = np.float(code_str[2:4])
-    msec = np.float(code_str[4:])/1000
-    jd = day + (hr + (min + (sec + msec)/60)/60)/24;
+    day = np.float64(ddd)
+    hr = np.float64(hh)
+    min = np.float64(code_str[0:2])
+    sec = np.float64(code_str[2:4])
+    msec = np.float64(code_str[4:])/1000
+    jd = day + (hr + (min + (sec + msec)/60)/60)/24
     return jd
 
 
@@ -89,18 +86,16 @@ def find(b):
 
     Returns 1-D ndarray of int64.
     """
-    from numpy import sum, argsort, sort, ndarray
-
-    if type(b) != ndarray:
-        raise ValueError ('find: Input should be ndarray')
+    if not isinstance(b, np.ndarray):
+        raise ValueError('find: Input should be ndarray')
     if b.dtype != 'bool':
-        raise ValueError ('find: Input should be boolean array')
+        raise ValueError('find: Input should be boolean array')
     if b.ndim > 1:
-        raise ValueError ('find: Input should be 1-D')
+        raise ValueError('find: Input should be 1-D')
 
-    F = b.size - sum(b)    # number of False in b
-    idx = argsort(b)[F:]   # argsort puts True at the end, so select [F:]
-    idx = sort(idx)        # be sure values in idx are ordered low to high
+    F = b.size - np.sum(b)    # number of False in b
+    idx = np.argsort(b)[F:]   # argsort puts True at the end, so select [F:]
+    idx = np.sort(idx)        # be sure values in idx are ordered low to high
     return idx
 
 
@@ -115,24 +110,22 @@ def md2jd(YYYY, MM, DD):
     Returns integer day of year
 
     """
-    import numpy as np
-
-    day_tab = [[31,28,31,30,31,30,31,31,30,31,30,31],
-               [31,29,31,30,31,30,31,31,30,31,30,31]]
+    day_tab = [[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+               [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]]
     days = np.array(day_tab)
-    yr = np.int(YYYY)
-    mo = np.int(MM)
-    day = np.int(DD)
+    yr = np.int64(YYYY)
+    mo = np.int64(MM)
+    day = np.int64(DD)
 
-    leap = np.logical_and((np.remainder(yr,4) == 0),
-                          (np.remainder(yr,100) != 0))
-    leap = np.logical_or(leap, (np.remainder(yr,400) == 0))
+    leap = np.logical_and((np.remainder(yr, 4) == 0),
+                          (np.remainder(yr, 100) != 0))
+    leap = np.logical_or(leap, (np.remainder(yr, 400) == 0))
 
     yday = day
-    for ii in np.arange(1,mo):
-        yday += days[leap,ii-1]
+    for ii in np.arange(1, mo):
+        yday += days[leap, ii-1]
 
-    return np.int(yday)
+    return np.int64(yday)
 
 
 def jd2md(YYYY, DOY):
@@ -148,23 +141,23 @@ def jd2md(YYYY, DOY):
     """
     import numpy as np
 
-    day_tab = [[31,28,31,30,31,30,31,31,30,31,30,31],
-               [31,29,31,30,31,30,31,31,30,31,30,31]]
+    day_tab = [[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+               [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]]
     days = np.array(day_tab)
-    yr = np.int(YYYY)
-    jd = np.int(DOY)
+    yr = np.int64(YYYY)
+    jd = np.int64(DOY)
 
-    leap = np.logical_and((np.remainder(yr,4) == 0),
-                          (np.remainder(yr,100) != 0))
-    leap = np.logical_or(leap, (np.remainder(yr,400) == 0))
+    leap = np.logical_and((np.remainder(yr, 4) == 0),
+                          (np.remainder(yr, 100) != 0))
+    leap = np.logical_or(leap, (np.remainder(yr, 400) == 0))
 
     ii = 1
-    while jd > days[leap,ii-1]:
-        jd -= days[leap,ii-1]
+    while jd > days[leap, ii-1]:
+        jd -= days[leap, ii-1]
         ii += 1
 
-    mo = np.int(ii)
-    day = np.int(jd)
+    mo = np.int64(ii)
+    day = np.int64(jd)
     return (mo, day)
 
 
@@ -179,17 +172,14 @@ def replace_nan(x):
 
     3/2015 BWB
     """
-    import numpy as np
-#
     x2 = np.zeros(len(x))
-    np.copyto(x2,x)
-#
-    bads = find(np.isnan(x)) # indices of NaNs
+    np.copyto(x2, x)
+    bads = find(np.isnan(x))  # indices of NaNs
     if bads.size == 0:
         return x2
     else:
         fins = find(np.isfinite(x))        # indices for all finites
-        for ii in np.arange(0,bads.size):  # for all NaNs
+        for ii in np.arange(0, bads.size):  # for all NaNs
             # locate index of nearest finite
             diffs = np.abs(fins-bads[ii])
             idx = diffs.argmin()
@@ -243,7 +233,7 @@ def print_attributes(obj):
     Prints attributes for given object
     """
     for attr in obj.__dict__:
-        print(attr), getattr(obj,attr)
+        print(attr), getattr(obj, attr)
 
 
 def walk(dirname):
@@ -254,27 +244,9 @@ def walk(dirname):
     import os
 
     for name in os.listdir(dirname):
-        path = os.path.join(dirname,name)
+        path = os.path.join(dirname, name)
 
         if os.path.isfile(path):
             print(path)
         else:
             walk(path)
-
-# Test code
-if __name__ == '__main__':
-    print('test')
-#     print 'testing invert_dict'
-#     d = dict(a=1, b=2, c=3, z=1)
-#     print d
-#     inverse = invert_dict(d)
-#     for val, keys in inverse.iteritems():
-#         print val, keys
-#
-#     print "testing find_module('site.py')"
-#     result = find_module('site.py')
-#     print result
-#
-#     print 'testing walk(os.getcwd())'
-#     walk(os.getcwd())
-

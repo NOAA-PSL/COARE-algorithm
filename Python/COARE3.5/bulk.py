@@ -544,14 +544,13 @@ def coare35vn(u, t, rh, ts, P=1015, Rs=150, Rl=370, zu=18, zt=18, zq=18, lat=45,
 
 
 # This code executes if 'run bulk.py' is executed from iPython cmd line
-# Edit line 533 to indicate path to test data file
 if __name__ == '__main__':
     import numpy as np
     import os
     import util
     import matplotlib.pyplot as plt
 
-    path = '/Volumes/MyPassport/pyCOARE_NOAA'
+    path = os.path.dirname(__file__)
     fil = 'test_35_data.txt'
     cols = 15
     data, varNames = util.load_txt_file(path,fil,cols)

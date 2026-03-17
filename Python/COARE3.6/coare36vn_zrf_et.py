@@ -949,14 +949,13 @@ def albedo_vector(sw_dn = None,jd = None,lon = None,lat = None,eorw = None):
 #------------------------------------------------------------------------------
 
 # This code executes if 'run coare36vn_zrf_et.py' is executed from iPython cmd line
-# Edit line 959 to indicate path to test data file
 if __name__ == '__main__':
     # import numpy as np
     # import os
     # import util
     # import matplotlib.pyplot as plt
     
-    path = '/Users/ludo/Documents/Work/COARE/conversion2python_tests/'
+    path = os.path.dirname(__file__)
     fil = 'test_36_data.txt'   
     data = np.genfromtxt(path+fil, skip_header=1)
     u = data[:,1]

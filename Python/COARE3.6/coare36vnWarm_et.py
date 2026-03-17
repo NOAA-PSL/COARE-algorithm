@@ -430,7 +430,7 @@ if __name__ == '__main__':
     fnameA = os.path.join(path,'test_36_output_py_082022_withwavesinput_withwarmlayer.txt')
     A=coare36vnWarm_et(Jd, U, Zu, Tair, Zt, RH, Zq, P, Tsg, SW_dn, LW_dn, Lat, Lon, Zi, Rainrate, Ts_depth, Ss, None, None, zrf_u, zrf_t, zrf_q)
     fnameA = os.path.join(path,'test_36_output_py_082022_withnowavesinput_withwarmlayer.txt')
-    A_hdr = 'usr\ttau\thsb\thlb\thbb\thlwebb\ttsr\tqsr\tzo\tzot\tzoq\tCd\t'
+    A_hdr = 'usr\ttau\thsb\thlb\thbb\thsbb\thlwebb\ttsr\tqsr\tzo\tzot\tzoq\tCd\t'
     A_hdr += 'Ch\tCe\tL\tzeta\tdT_skinx\tdq_skinx\tdz_skin\tUrf\tTrf\tQrf\t'
     A_hdr += 'RHrf\tUrfN\tTrfN\tQrfN\tlw_net\tsw_net\tLe\trhoa\tUN\tU10\tU10N\t'
     A_hdr += 'Cdn_10\tChn_10\tCen_10\thrain\tQs\tEvap\tT10\tT10N\tQ10\tQ10N\tRH10\t'
